@@ -49,6 +49,10 @@ derby.log
 # HDFS (datos generados, no versionar)
 # Los datos en HDFS se generan al ejecutar el pipeline
 
+# Archivos de datos grandes (no versionar)
+*.tsv
+data/
+
 # Archivos de configuración local (si los hay)
 *.local
 .env.local
