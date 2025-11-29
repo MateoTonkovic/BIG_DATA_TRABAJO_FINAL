@@ -82,6 +82,8 @@ services:
     environment:
       - "SPARK_MASTER=spark://spark-master:7077"
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - "SPARK_WORKER_MEMORY=6g"
+      - "SPARK_WORKER_CORES=4"
 
   hive-server:
     image: bde2020/hive:2.3.2-postgresql-metastore
@@ -94,6 +96,8 @@ services:
     environment:
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
       SERVICE_PRECONDITION: "hive-metastore:9083"
+      CORE_CONF_fs_defaultFS: hdfs://namenode:9000
+
     ports:
       - "10000:10000"
 
@@ -113,6 +117,8 @@ services:
     container_name: hive-metastore-postgresql
     ports:
       - "5432:5432"
+    volumes:
+      - hive_metastore_postgresql:/var/lib/postgresql/data
   presto-coordinator:
     image: shawnzhu/prestodb:0.181
     container_name: presto-coordinator
@@ -123,4 +129,5 @@ volumes:
   hadoop_namenode:
   hadoop_datanode:
   hadoop_historyserver:
+  hive_metastore_postgresql:
 

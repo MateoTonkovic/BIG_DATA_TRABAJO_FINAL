@@ -1,1 +1,54 @@
-data/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+venv/
+env/
+ENV/
+.venv
+
+*.jpg
+*.jpeg
+
+
+# Logs
+*.log
+logs/
+
+.dockerignore
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# HDFS (datos generados, no versionar)
+# Los datos en HDFS se generan al ejecutar el pipeline
+
+# Archivos de configuración local (si los hay)
+*.local
+.env.local

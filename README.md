@@ -259,3 +259,60 @@ The available configurations are:
 * /etc/hadoop/mapred-site.xml  MAPRED_CONF
 
 If you need to extend some other configuration file, refer to base/entrypoint.sh bash script.
+
+## Proyecto: Data Lake para Productora Cinematográfica
+
+Este repositorio incluye un proyecto completo de Data Lake diseñado para una productora cinematográfica, implementando un pipeline de datos con IMDb y generando visualizaciones ejecutivas.
+
+### Archivos del Proyecto
+
+- **`imdb_pipeline.py`**: Pipeline principal que procesa datos de IMDb y los estructura en zonas Landing, Raw y Curated
+- **`visualizations.py`**: Script que genera visualizaciones ejecutivas con KPIs relevantes para la productora
+- **`data/`**: Archivos TSV de IMDb (title.basics.tsv, title.ratings.tsv, name.basics.tsv)
+- **`run_visualizations.sh`**: Script helper para ejecutar las visualizaciones fácilmente
+
+### Ejecución Rápida del Proyecto
+
+1. **Iniciar el stack:**
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Cargar datos a HDFS:**
+   ```bash
+   docker cp data/ namenode:/tmp/data
+   docker exec -it namenode bash
+   hdfs dfs -mkdir -p /landing/imdb
+   hdfs dfs -put /tmp/data/* /landing/imdb
+   ```
+
+3. **Ejecutar el pipeline:**
+   ```bash
+   docker cp imdb_pipeline.py spark-master:/tmp/imdb_pipeline.py
+   docker exec spark-master /spark/bin/spark-submit \
+       --master spark://spark-master:7077 \
+       /tmp/imdb_pipeline.py
+   ```
+
+4. **Generar visualizaciones:**
+   ```bash
+   ./run_visualizations.sh
+   ```
+   O manualmente:
+   ```bash
+   docker cp visualizations.py spark-master:/tmp/visualizations.py
+   docker exec spark-master /spark/bin/spark-submit \
+       --master spark://spark-master:7077 \
+       /tmp/visualizations.py
+   docker cp spark-master:/tmp/visualizations ./visualizations_output
+   ```
+
+### Visualizaciones Generadas
+
+El script genera 5 visualizaciones en alta resolución (300 DPI):
+
+1. **Estadísticas por Género**: Volumen, calidad, duración y análisis comparativo
+2. **Rankings de Popularidad**: Top películas y oportunidades de mercado
+3. **Análisis por Décadas**: Evolución histórica del cine
+4. **Análisis de Talento**: KPIs para casting y selección de equipos
+4. **Análisis de Talento**: Evaluación de actores, directores y otros profesionales
